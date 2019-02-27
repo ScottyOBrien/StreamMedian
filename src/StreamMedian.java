@@ -11,32 +11,58 @@
 import java.util.*;
 public class StreamMedian {
 
-    // delcaring our priority queues, 'bigger' and 'smaller'.
-    PriorityQueue<Integer> bigger = new PriorityQueue<>();
-    PriorityQueue<Integer> smaller = new PriorityQueue<>();
+   private int count = 0;
+    // Creating our priority queues, 'bigger'(min heap) and 'smaller'(max heap).
+   private PriorityQueue<Integer> bigger = new PriorityQueue<>();
+   private PriorityQueue<Integer> smaller = new PriorityQueue<>(new Comparator<Integer>() {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            if (o1 < o2) return +1;
+            if (o1.equals(o2)) return 0;
+            return -1;
+        }
+    });
 
     public StreamMedian(){
-        double max = 0;
-        double min = 0;
-        double median = 0;
+//        double max = 0;
+//        double min = 0;
+//        double median = 0;
     }
 
     // insert an item into a queue.
-    public void insert(Integer i){}
+    public void insert(Integer i) {
 
-    public double getMedian(){
-        double m = 0;
-
-        if (this.bigger.size() == this.smaller.size()) {
-            //m = this.smaller.
-
-            return m;
+        if(count % 2 == 0) {
+            this.smaller.add(i);
         }
+        else {
+            this.bigger.add(i);
+        }
+        sortQueues();
+        count++;
+    }
 
+    public double getMedian() {
+        double m;
+
+        if (this.bigger.size() + this.smaller.size() % 2 == 0) {
+            m = this.smaller.peek() + this.bigger.peek() / 2;
+        } else {
+            m = this.smaller.peek();
+        }
         return m;
     }
-}
 
-//public class compareQueue implements Comparator<StreamMedian> {
-//    public
-//}
+    //this method helps us make sure that our smaller(lower values) and bigger(higher values) queues have what they are supposed to.
+    private void sortQueues() {
+        Integer smallValue;
+        Integer bigValue;
+        if (this.smaller.peek() > this.bigger.peek()) {
+            smallValue = this.smaller.poll();
+            bigValue = this.bigger.poll();
+
+            this.bigger.add(smallValue);
+            this.smaller.add(bigValue);
+        }
+    }
+}
