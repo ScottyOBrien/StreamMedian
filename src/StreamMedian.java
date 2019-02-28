@@ -1,6 +1,6 @@
 /**
- * Author: Scott O'Brien
- * Due Date: 2/28/2019
+ * @author Scott O'Brien
+ * @version 2/28/2019
  * Assignment: StreamMedian.java
  *
  * Description: This java program implements a max and min heap using priority queues and takes in a stream of data,
@@ -17,9 +17,7 @@ public class StreamMedian {
    private PriorityQueue<Integer> smaller = new PriorityQueue<>(new Comparator<Integer>() {
         @Override
         public int compare(Integer o1, Integer o2) {
-            if (o1 < o2) return +1;
-            if (o1.equals(o2)) return 0;
-            return -1;
+            return o2 - o1;
         }
     });
 
@@ -38,15 +36,17 @@ public class StreamMedian {
         else {
             this.bigger.add(i);
         }
-        sortQueues();
         count++;
+        if (count > 1) {
+            sortQueues();
+        }
     }
 
     public double getMedian() {
         double m;
 
-        if (this.bigger.size() + this.smaller.size() % 2 == 0) {
-            m = this.smaller.peek() + this.bigger.peek() / 2;
+        if ((this.bigger.size() + this.smaller.size()) % 2 == 0) {
+            m = (double)(this.smaller.peek() + this.bigger.peek()) / 2;
         } else {
             m = this.smaller.peek();
         }
@@ -57,6 +57,7 @@ public class StreamMedian {
     private void sortQueues() {
         Integer smallValue;
         Integer bigValue;
+
         if (this.smaller.peek() > this.bigger.peek()) {
             smallValue = this.smaller.poll();
             bigValue = this.bigger.poll();
